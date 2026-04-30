@@ -134,5 +134,67 @@ LIMIT 3;
 SELECT COUNT(DISTINCT student_id) AS FailedStudents
 FROM Enrollments
 WHERE grade < 40;
-
 -- END OF TASK2
+
+
+--Task3 : Complex SQL queries with JOINs, GROUP BY, and Subqueries.
+--Queries
+
+-- 1. Top student per course
+--  Using JOIN + Subquery
+SELECT c.name AS Course, s.Name AS Student, e.grade
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+JOIN Courses c ON e.course_id = c.id
+WHERE e.grade = (
+    SELECT MAX(e2.grade)
+    FROM Enrollments e2
+    WHERE e2.course_id = e.course_id
+);
+ 
+-- 2. Pass rate per course (grade ≥ 40)
+-- Using GROUP BY
+
+SELECT 
+    c.name AS Course,
+    (SUM(CASE WHEN e.grade >= 40 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS PassRate
+FROM Enrollments e
+JOIN Courses c ON e.course_id = c.id
+GROUP BY c.name;
+
+
+-- 3. Overall topper across all courses
+-- Using SUM + ORDER BY
+
+SELECT s.Name, SUM(e.grade) AS TotalMarks
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+GROUP BY s.Name
+ORDER BY TotalMarks DESC
+LIMIT 1;
+
+
+-- 4. Students enrolled in multiple courses
+-- Using GROUP BY + HAVING
+
+SELECT s.Name, COUNT(e.course_id) AS TotalCourses
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+GROUP BY s.Name
+HAVING COUNT(e.course_id) > 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
