@@ -183,7 +183,7 @@ JOIN Students s ON e.student_id = s.StudentID
 GROUP BY s.Name
 HAVING COUNT(e.course_id) > 1;
 
--- End of Task 4.
+-- End of Task 3
 
 -- Task-4 (Analytical Reports).
 -- 1. Average Grade by Gender
