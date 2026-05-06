@@ -183,18 +183,46 @@ JOIN Students s ON e.student_id = s.StudentID
 GROUP BY s.Name
 HAVING COUNT(e.course_id) > 1;
 
---End of Task 4.
+-- End of Task 4.
+
+-- Task-4 (Analytical Reports).
+-- 1. Average Grade by Gender
+SELECT s.Gender, AVG(e.grade) AS Avg_Grade
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+GROUP BY s.Gender;
+
+-- 2. Pass Rate per Course (grade ≥ 40)
+SELECT 
+    c.name AS Course,
+    (SUM(CASE WHEN e.grade >= 40 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS Pass_Percentage
+FROM Enrollments e
+JOIN Courses c ON e.course_id = c.id
+GROUP BY c.name;
+
+-- 3. Top 3 Students Overall (based on average grade)
+SELECT s.Name, AVG(e.grade) AS Avg_Grade
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+GROUP BY s.Name
+ORDER BY Avg_Grade DESC
+LIMIT 3;
+
+-- 4. Students in Multiple Courses (> 2 courses)
+SELECT s.Name, COUNT(e.course_id) AS Total_Courses
+FROM Enrollments e
+JOIN Students s ON e.student_id = s.StudentID
+GROUP BY s.Name
+HAVING COUNT(e.course_id) > 2;
+
+-- 5.  Improvement Report
+SELECT s.name AS student,
+       MAX(e.grade) - MIN(e.grade) AS improvement
+FROM Students s
+JOIN Enrollments e ON StudentID = e.student_id
+GROUP BY StudentID, s.name
+HAVING improvement > 0;
 
 
-
-
-
-
-
-
-
-
-
-
-
+-- End of Task-4
 
